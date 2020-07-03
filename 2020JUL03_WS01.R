@@ -35,7 +35,15 @@ depth =
 #                                             "%d/%m/%y %H:%M:%S")) %>%
 #   slice(70:75)
 
+# MACOS の場合、次のコード
+# depth %>%
+#   mutate(datetime = str_replace(datetime, "午後", "PM")) %>%
+#   mutate(datetime = str_replace(datetime, "午前", "AM")) %>%
+#   mutate(datetime = parse_date_time(datetime, "%d/%m/%y %H:%M:%S"))
+
 depth = depth %>% mutate(datetime = parse_date_time(datetime, "mdyT*"))
+
+
 
 ######################################
 
