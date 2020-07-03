@@ -2,7 +2,6 @@
 # Greg Nishihara
 # 2020 Jul 03 13:00:00
 
-
 # RStudio について
 
 # GitHub について

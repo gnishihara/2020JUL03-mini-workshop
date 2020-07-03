@@ -6,15 +6,15 @@
 
 library(tidyverse)
 library(rvest) # HTMLの読み込みに必要
-library(lubridate)
+library(lubridate) # 時刻データの処理
 
 source("scrape_jma_table.R")
 
 
 # この関数は一回実行して、結果を保存してください。
 # 実行したあと、コメントにしてください。
-# prec_no = scrape_prec_no()
-# write_csv(prec_no, path = "list_of_prec_no.csv")
+prec_no = scrape_prec_no()
+write_csv(prec_no, path = "list_of_prec_no.csv")
 
 
 prec_no = read_csv("list_of_prec_no.csv")
