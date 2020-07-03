@@ -104,7 +104,7 @@ depthdata = alldata %>%
                values_to = "depth")
 
 temperaturedata = alldata %>%
-  select(datetime, contains("temperature"))%>%
+  select(datetime, contains("temperature")) %>%
   pivot_longer(cols = c(temperature_south,
                         temperature_north,
                         temperature_west),
@@ -130,11 +130,62 @@ tmp2 = full_join(temperaturedata %>% select(-measurement),
 light_wind_data = alldata %>% select(datetime, insolation, wind, gust)
 
 
-
 # 統計量の求め方
+
+tmp2 = tmp2 %>%
+  mutate(date = as_date(datetime)) %>%
+  group_nest(site, date) %>%
+  mutate(n = map_dbl(data, function(X) {
+    X %>% nrow()
+  })) %>%
+  filter(near(n, 144))
+
+temperature_summary = tmp2 %>% unnest(data) %>%
+  group_by(site, date) %>%
+  summarise_at(vars(temperature),
+               list(mean = mean, min = min, max = max, sd = sd))
+
+temperature_summary
 
 # 作図
 
+ylabel = "Water temperature (°C)"
+xlabel = "Year-Month-Date"
+clabel = "Site"
+
+plot1 =
+  temperature_summary %>%
+  mutate(site = str_to_sentence(site)) %>%
+  ggplot() +
+  geom_line(aes(x = date,
+                y = mean,
+                color = site)) +
+  scale_x_date(xlabel, date_labels = "%Y-%m-%d",
+               date_breaks = "2 weeks") +
+  scale_y_continuous(ylabel, limits = c(20, 28)) +
+  scale_color_discrete(clabel) +
+  ggtitle("Mean water temperature") +
+  theme(legend.position = c(1,1),
+        legend.justification = c(1,1))
+plot1
+
+ggplot(temperature_summary) +
+  geom_line(aes(x = date,
+                y = min,
+                color = site))
+
+ggplot(temperature_summary) +
+  geom_line(aes(x = date,
+                y = max,
+                color = site))
+
 # 図書き込み
+
+ggsave("mean_temperature.png",
+       plot = plot1,
+       width = 160,
+       height = 160,
+       unit = "mm",
+       dpi = 600)
 
 
