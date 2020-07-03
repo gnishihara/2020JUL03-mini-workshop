@@ -70,12 +70,16 @@ microstation = microstation %>%
 microstation = microstation %>%
   mutate(datetime = floor_date(datetime, unit = "10 minutes"))
 
-full_join(depth %>% select(-fname),
-          microstation %>% select(-fname),
-          by = c("datetime")) %>%
-  arrange(datetime) %>%
-  slice(10:30)
 
+depth_wide = depth %>%
+  select(-fname) %>%
+  drop_na() %>%
+  pivot_wider(names_from = site,
+              values_from = c(kpa, temperature))
+
+alldata = full_join(depth_wide,
+          microstation %>% select(-fname),
+          by = c("datetime"))
 
 
 # 統計量の求め方
