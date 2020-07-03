@@ -112,6 +112,24 @@ temperaturedata = alldata %>%
                values_to = "temperature")
 
 
+kpadata = kpadata %>%
+  separate(kpa_site, into = c("measurement", "site"))
+depthdata = depthdata %>%
+  separate(depth_site, into = c("measurement", "site"))
+temperaturedata = temperaturedata %>%
+  separate(temperature_site, into = c("measurement", "site"))
+
+tmp1 = full_join(kpadata %>% select(-measurement),
+          depthdata %>% select(-measurement),
+          by = c("datetime", "site"))
+
+tmp2 = full_join(temperaturedata %>% select(-measurement),
+          tmp1,
+          by = c("datetime", "site"))
+
+light_wind_data = alldata %>% select(datetime, insolation, wind, gust)
+
+
 
 # 統計量の求め方
 
