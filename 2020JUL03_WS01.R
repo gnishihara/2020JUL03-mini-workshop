@@ -43,6 +43,10 @@ depth =
 
 depth = depth %>% mutate(datetime = parse_date_time(datetime, "mdyT*"))
 
+depth = depth %>% mutate(site = str_extract(fname, "north|west|south"))
+
+
+
 
 
 ######################################
@@ -54,16 +58,28 @@ microstation = tibble(fname) %>% filter(str_detect(fname, "Microstation"))
 microstation = microstation %>%
   mutate(data = map(fname, read_csv, skip = 1)) %>% unnest(data)
 
-microstation %>%
+microstation = microstation %>%
   select(fname,
          datetime = matches("日付 時間"),
          insolation = matches("日射"),
          wind = matches("風速"),
          gust = matches("突風"),
-         kpa_micro = matches("圧力"))
-
+         kpa_micro = matches("圧力")) %>%
+  mutate(datetime = parse_date_time(datetime, "mdyT*"))
 
 # データの結合
+
+
+microstation = microstation %>%
+  mutate(datetime = floor_date(datetime, unit = "10 minutes"))
+
+full_join(depth %>% select(-fname),
+          microstation %>% select(-fname),
+          by = c("datetime")) %>%
+  arrange(datetime) %>%
+  slice(10:30)
+
+
 
 # 統計量の求め方
 
