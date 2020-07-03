@@ -28,7 +28,7 @@ depth =
   select(fname,
          datetime = matches("日付 時間"),
          kpa = matches("^絶対圧力, kPa$"),
-         temperature_air = matches("^温度, °C$"))
+         temperature = matches("^温度, °C$"))
 # 正規表現
 
 # depth %>% mutate(datetime = parse_date_time(datetime,
@@ -44,9 +44,6 @@ depth =
 depth = depth %>% mutate(datetime = parse_date_time(datetime, "mdyT*"))
 
 depth = depth %>% mutate(site = str_extract(fname, "north|west|south"))
-
-
-
 
 
 ######################################
