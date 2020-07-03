@@ -9,7 +9,7 @@
 library(tidyverse)
 library(rvest)
 library(lubridate)
-source("prec_and_block.R")
+source("scrape_prec_no.R")
 
 # Functions ----------------------------------------------------------
 
