@@ -31,7 +31,29 @@ depth =
          temperature_air = matches("^温度, °C$"))
 # 正規表現
 
-depth
+# depth %>% mutate(datetime = parse_date_time(datetime,
+#                                             "%d/%m/%y %H:%M:%S")) %>%
+#   slice(70:75)
+
+depth = depth %>% mutate(datetime = parse_date_time(datetime, "mdyT*"))
+
+######################################
+
+# Microstation
+
+microstation = tibble(fname) %>% filter(str_detect(fname, "Microstation"))
+
+microstation = microstation %>%
+  mutate(data = map(fname, read_csv, skip = 1)) %>% unnest(data)
+
+microstation %>%
+  select(fname,
+         datetime = matches("日付 時間"),
+         insolation = matches("日射"),
+         wind = matches("風速"),
+         gust = matches("突風"),
+         kpa_micro = matches("圧力"))
+
 
 # データの結合
 
