@@ -22,13 +22,16 @@ depth = tibble(fname) %>%
 depth = depth %>%
   mutate(data = map(fname, read_csv, skip = 1))
 
-depth %>%
+depth =
+  depth %>%
   unnest(data) %>%
   select(fname,
          datetime = matches("日付 時間"),
-         kpa = matches("^絶対, kPa$"),
+         kpa = matches("^絶対圧力, kPa$"),
          temperature_air = matches("^温度, °C$"))
+# 正規表現
 
+depth
 
 # データの結合
 
