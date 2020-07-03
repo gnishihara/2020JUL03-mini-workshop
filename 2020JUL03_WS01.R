@@ -12,8 +12,10 @@ library(lubridate)
 ## ファイルの場所
 
 path = "~/Lab_Data/2020JUL_ZOOM_DATA/"
-dir(path, recursive = TRUE, pattern = "[Cc][Ss][Vv]$", full.names = TRUE)
+fname = dir(path, recursive = TRUE, pattern = "[Cc][Ss][Vv]$", full.names = TRUE)
 
+tibble(fname) %>%
+  filter(str_detect(fname, "Depth"))
 
 # データの結合
 
