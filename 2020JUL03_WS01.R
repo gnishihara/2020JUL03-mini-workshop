@@ -81,6 +81,37 @@ alldata = full_join(depth_wide,
           microstation %>% select(-fname),
           by = c("datetime"))
 
+alldata
+
+# 水深のもとめかた
+
+alldata = alldata %>%
+  mutate(depth_south = (kpa_south - kpa_micro)/9.81,
+         depth_north = (kpa_north - kpa_micro)/9.81,
+         depth_west =  (kpa_west - kpa_micro)/9.81) %>%
+  drop_na()
+
+kpadata = alldata %>%
+  select(datetime, contains("kpa"), -kpa_micro) %>%
+  pivot_longer(cols = c(kpa_south, kpa_north, kpa_west),
+               names_to = "kpa_site",
+               values_to = "kpa")
+
+depthdata = alldata %>%
+  select(datetime, contains("depth"))%>%
+  pivot_longer(cols = c(depth_south, depth_north, depth_west),
+               names_to = "depth_site",
+               values_to = "depth")
+
+temperaturedata = alldata %>%
+  select(datetime, contains("temperature"))%>%
+  pivot_longer(cols = c(temperature_south,
+                        temperature_north,
+                        temperature_west),
+               names_to = "temperature_site",
+               values_to = "temperature")
+
+
 
 # 統計量の求め方
 
