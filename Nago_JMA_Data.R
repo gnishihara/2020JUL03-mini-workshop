@@ -8,8 +8,14 @@ library(tidyverse)
 library(rvest) # HTMLの読み込みに必要
 library(lubridate)
 
-source("prec_and_block.R")
 source("scrape_jma_table.R")
+
+
+# この関数は一回実行して、結果を保存してください。
+# 実行したあと、コメントにしてください。
+# prec_no = scrape_prec_no()
+# write_csv(prec_no, path = "list_of_prec_no.csv")
+
 
 prec_no = read_csv("list_of_prec_no.csv")
 block_no = scrape_block_no(prec_no = 91)
@@ -43,4 +49,4 @@ nago = nago2019 %>% bind_rows(nago2020)
 nago = nago %>% unnest(data) %>% mutate(H = hour(datetime) + minute(datetime)/60)
 
 write.csv(nago, file = "nago_2019to2020_06.csv")
-file.copy("nago_2019to2020_06.csv", "~/Data/Mozuku2019/nago_2019to2020_06.csv")
+# file.copy("nago_2019to2020_06.csv", "~/Data/Mozuku2019/nago_2019to2020_06.csv")
